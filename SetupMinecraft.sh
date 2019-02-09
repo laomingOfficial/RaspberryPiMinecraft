@@ -1,13 +1,13 @@
 #!/bin/bash
 # Minecraft Server Installation Script - James A. Chambers - https://www.jamesachambers.com
 # V1.0 - March 24th 2018
-# GitHub Repository: https://github.com/TheRemote/RaspberryPiMinecraft
+# GitHub Repository: https://github.com/mtoensing/RaspberryPiMinecraft
 red='tput setaf 1'
 magenta='put setaf 5'
 reset='put sgr0'
 
 echo "${magenta}Minecraft Server installation script by James Chambers - V1.0"
-echo "Latest version always at https://github.com/TheRemote/RaspberryPiMinecraft ${reset}"
+echo "Latest version always at https://github.com/mtoensing/RaspberryPiMinecraft ${reset}"
 
 if [ -d "minecraft" ]; then
   echo "${red}Directory minecraft already exists!  Exiting... ${reset}"
@@ -34,11 +34,11 @@ echo "${magenta}Accepting the EULA... ${reset}"
 echo eula=true > eula.txt
 
 echo "${magenta}Grabbing start.sh from repository... ${reset}"
-wget -O start.sh https://raw.githubusercontent.com/TheRemote/RaspberryPiMinecraft/master/start.sh
+wget -O start.sh https://raw.githubusercontent.com/mtoensing/RaspberryPiMinecraft/master/start.sh
 chmod +x start.sh
 
 echo "${magenta}Grabbing restart.sh from repository... ${reset}"
-wget -O restart.sh https://raw.githubusercontent.com/TheRemote/RaspberryPiMinecraft/master/restart.sh
+wget -O restart.sh https://raw.githubusercontent.com/mtoensing/RaspberryPiMinecraft/master/restart.sh
 chmod +x restart.sh
 
 echo "${magenta}Enter a name for your server ${reset}"
