@@ -15,7 +15,7 @@ if [ -d "minecraft" ]; then
 fi
 
 echo "${magenta}Installing latest Java OpenJDK 9... ${reset}"
-sudo apt-get install openjdk-9-jdk-headless -y
+sudo apt-get install openjdk-8-jdk-headless -y
 
 echo "${magenta}Installing screen... ${reset}"
 sudo apt-get install screen -y
