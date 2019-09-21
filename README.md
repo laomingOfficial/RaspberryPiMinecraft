@@ -7,4 +7,4 @@ This is an early basic fork of the original version found here: https://www.jame
  
 # Watch the video tutorial
 
-[![Watch the video](https://img.youtube.com/vi/t1cr2UasuhQ/maxresdefault.jpg)](https://youtu.be/LtAQiTwLgak)
+[![Watch the video](https://img.youtube.com/vi/t1cr2UasuhQ/maxresdefault.jpg)](https://youtu.be/t1cr2UasuhQ)
