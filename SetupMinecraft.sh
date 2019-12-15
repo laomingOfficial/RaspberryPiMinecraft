@@ -1,53 +1,51 @@
 #!/bin/bash
-# Minecraft Server Installation Script - James A. Chambers - https://www.jamesachambers.com
-# V1.0 - March 24th 2018
+# Original Minecraft Server Installation Script - James A. Chambers - https://www.jamesachambers.com.
+# Changes and simplifications by Marc Tönsing
+# V1.1 - Dec 15th 2019
 # GitHub Repository: https://github.com/mtoensing/RaspberryPiMinecraft
-red=''
-magenta=''
-reset=''
 
-echo "${magenta}Minecraft Server installation script by James Chambers - V1.0"
-echo "Latest version always at https://github.com/mtoensing/RaspberryPiMinecraft ${reset}"
+echo "Minecraft Server installation script by James Chambers and Marc Tönsing - V1.0"
+echo "Latest version always at https://github.com/mtoensing/RaspberryPiMinecraft"
 
 if [ -d "minecraft" ]; then
-  echo "${red}Directory minecraft already exists!  Exiting... ${reset}"
+  echo "Directory minecraft already exists!  Exiting... "
   exit 1
 fi
 
-echo "${magenta}Updating packages... ${reset}"
+echo "Updating packages..."
 sudo apt-get update
 
-echo "${magenta}Installing latest Java OpenJDK 8... ${reset}"
+echo "Installing latest Java OpenJDK 8..."
 sudo apt-get install openjdk-8-jdk-headless -y
 
-echo "${magenta}Installing screen... ${reset}"
+echo "Installing screen... "
 sudo apt-get install screen -y
 
-echo "${magenta}Creating minecraft server directory... ${reset}"
+echo "Creating minecraft server directory..."
 mkdir minecraft
 cd minecraft
 
-echo "${magenta}Getting latest Paper Minecraft server... ${reset}"
+echo "Getting latest Paper Minecraft server..."
 wget -O paperclip.jar https://papermc.io/api/v1/paper/1.15/latest/download
 
-echo "${magenta}Building the Minecraft server... ${reset}"
+echo "Building the Minecraft server... "
 java -jar -Xms800M -Xmx800M paperclip.jar
 
-echo "${magenta}Accepting the EULA... ${reset}"
+echo "Accepting the EULA... "
 echo eula=true > eula.txt
 
-echo "${magenta}Grabbing start.sh from repository... ${reset}"
+echo "Grabbing start.sh from repository... "
 wget -O start.sh https://raw.githubusercontent.com/mtoensing/RaspberryPiMinecraft/master/start.sh
 chmod +x start.sh
 
-echo "${magenta}Grabbing restart.sh from repository... ${reset}"
+echo "Grabbing restart.sh from repository... "
 wget -O restart.sh https://raw.githubusercontent.com/mtoensing/RaspberryPiMinecraft/master/restart.sh
 chmod +x restart.sh
 
-echo "${magenta}Enter a name for your server ${reset}"
+echo "Enter a name for your server "
 read -p 'Server Name: ' servername
 echo "server-name=$servername" >> server.properties
 echo "motd=$servername" >> server.properties
 
-echo "${magenta}Setup is complete.  To run the server go to the minecraft directory and type ./start.sh"
-echo "Don't forget to set up port forwarding on your router. The default port is 25565 ${reset}"
+echo "Setup is complete. To run the server go to the minecraft directory and type ./start.sh"
+echo "Don't forget to set up port forwarding on your router. The default port is 25565"
