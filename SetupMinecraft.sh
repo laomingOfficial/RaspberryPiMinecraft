@@ -2,9 +2,9 @@
 # Minecraft Server Installation Script - James A. Chambers - https://www.jamesachambers.com
 # V1.0 - March 24th 2018
 # GitHub Repository: https://github.com/mtoensing/RaspberryPiMinecraft
-red='tput setaf 1'
-magenta='put setaf 5'
-reset='put sgr0'
+red=''
+magenta=''
+reset=''
 
 echo "${magenta}Minecraft Server installation script by James Chambers - V1.0"
 echo "Latest version always at https://github.com/mtoensing/RaspberryPiMinecraft ${reset}"
