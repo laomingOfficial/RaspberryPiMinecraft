@@ -28,7 +28,7 @@ mkdir minecraft
 cd minecraft
 
 echo "${magenta}Getting latest Paper Minecraft server... ${reset}"
-wget -O paperclip.jar https://papermc.io/api/v1/paper/1.14.4/latest/download
+wget -O paperclip.jar https://papermc.io/api/v1/paper/1.15/latest/download
 
 echo "${magenta}Building the Minecraft server... ${reset}"
 java -jar -Xms800M -Xmx800M paperclip.jar
@@ -50,4 +50,4 @@ echo "server-name=$servername" >> server.properties
 echo "motd=$servername" >> server.properties
 
 echo "${magenta}Setup is complete.  To run the server go to the minecraft directory and type ./start.sh"
-echo "Don't forget to set up port forwarding on your router.  The default port is 25565 ${reset}"
+echo "Don't forget to set up port forwarding on your router. The default port is 25565 ${reset}"
