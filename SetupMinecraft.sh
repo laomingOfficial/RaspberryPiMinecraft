@@ -34,6 +34,13 @@ java -jar -Xms800M -Xmx800M paperclip.jar
 echo "Accepting the EULA... "
 echo eula=true > eula.txt
 
+echo "Checking for total memory available..."
+TotalMemory=$(awk '/MemTotal/ { printf "%.0f\n", $2/1024 }' /proc/meminfo)
+if [ $TotalMemory -lt 1100 ]; then
+  echo "Grabbing low spec start.sh from repository... "
+  wget -O start.sh https://raw.githubusercontent.com/mtoensing/RaspberryPiMinecraft/master/start_lowspec.sh
+fi
+
 echo "Grabbing start.sh from repository... "
 wget -O start.sh https://raw.githubusercontent.com/mtoensing/RaspberryPiMinecraft/master/start.sh
 chmod +x start.sh
