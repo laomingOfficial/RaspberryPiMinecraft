@@ -40,7 +40,7 @@ chmod +x start.sh
 
 echo "Oh wait. Checking for total memory available..."
 TotalMemory=$(awk '/MemTotal/ { printf "%.0f\n", $2/1024 }' /proc/meminfo)
-if [ $TotalMemory -lt 1100 ]; then
+if [ $TotalMemory -lt 3000 ]; then
   echo "Sorry, have to grab low spec start.sh from repository... "
   wget -O start.sh https://raw.githubusercontent.com/mtoensing/RaspberryPiMinecraft/master/start_lowspec.sh
 fi
