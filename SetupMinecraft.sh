@@ -15,8 +15,8 @@ fi
 echo "Updating packages..."
 sudo apt-get update
 
-echo "Installing latest Java OpenJDK 8..."
-sudo apt-get install openjdk-8-jdk-headless -y
+echo "Installing latest Java OpenJDK 11..."
+sudo apt-get install openjdk-11-jre-headless -y
 
 echo "Installing screen... "
 sudo apt-get install screen -y
