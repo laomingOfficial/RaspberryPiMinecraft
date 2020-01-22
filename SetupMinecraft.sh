@@ -26,7 +26,7 @@ mkdir minecraft
 cd minecraft
 
 echo "Getting latest Paper Minecraft server..."
-wget -O paperclip.jar https://papermc.io/api/v1/paper/1.15.1/latest/download
+wget -O paperclip.jar https://papermc.io/api/v1/paper/1.15.2/latest/download
 
 echo "Building the Minecraft server... "
 java -jar -Xms800M -Xmx800M paperclip.jar
