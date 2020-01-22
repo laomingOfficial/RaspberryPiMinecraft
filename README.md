@@ -1,4 +1,4 @@
-# Minecraft 1.15.1 auf dem Raspberry Pi 
+# Minecraft 1.15.2 auf dem Raspberry Pi 
 
 Eine deutsche Anleitung für die Konfigration eines Raspberry Pi mit Paper als stabiler Minecraft Server findet ihr hier:
 http://marc.tv/stabiler-minecraft-server-raspberry-pi
