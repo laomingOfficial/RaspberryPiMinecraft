@@ -4,8 +4,8 @@
 # V1.1 - Dec 15th 2019 https://github.com/mtoensing/RaspberryPiMinecraft
 # V1.9 - May 23th 2020 老明 https://github.com/laomingOfficial/RaspberryPiMinecraft
 
-echo "Minecraft Server installation script by James Chambers, Marc Tönsing & 老明 - V1.9"
-echo "Latest version always at https://github.com/laomingOfficial/RaspberryPiMinecraft"
+echo "Minecraft服务器安装脚本 by James Chambers, Marc Tönsing & 老明 - V1.9"
+echo "最新版本在 https://github.com/laomingOfficial/RaspberryPiMinecraft"
 
 # 读取total内存
 Get_ServerMemory(){
@@ -37,7 +37,6 @@ Update_Scripts() {
 	echo "下载stop.sh ..."
 	wget -O stop.sh https://raw.githubusercontent.com/laomingOfficial/RaspberryPiMinecraft/master/stop.sh
 	chmod +x stop.sh
-	sed -i "s:dirname:$DirName:g" stop.sh
 
 	# 下载restart.sh
 	echo "下载restart.sh ..."
@@ -74,7 +73,8 @@ if [ -d "minecraft" ]; then
 			echo "Minecraft服务器已关闭。"
 			break
 		fi
-	
+		
+		cd minecraft
 		Update_LatestMC
 		Update_Scripts
 		

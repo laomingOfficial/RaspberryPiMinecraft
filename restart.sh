@@ -9,6 +9,7 @@ if ! screen -list | grep -q "minecraft"; then
 	exit 1
 fi
 
+echo "关闭服务器，30秒倒数。。。"
 screen -Rd minecraft -X stuff "say Server is restarting in 30 seconds! $(printf '\r')"
 sleep 23s
 screen -Rd minecraft -X stuff "say Server is restarting in 7 seconds! $(printf '\r')"
@@ -29,7 +30,7 @@ screen -Rd minecraft -X stuff "say Closing server...$(printf '\r')"
 screen -Rd minecraft -X stuff "stop $(printf '\r')"
 
 # 等待30秒确保服务器已关闭
-echo "关闭服务器。。。"
+echo "检查服务器是否已关闭。。。"
 StopChecks=0
 while [ $StopChecks -lt 30 ]; do
   if ! screen -list | grep -q "minecraft"; then
@@ -39,5 +40,6 @@ while [ $StopChecks -lt 30 ]; do
   StopChecks=$((StopChecks+1))
 done
 
+echo "服务器已关闭。"
 echo "重启。"
 sudo reboot

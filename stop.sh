@@ -13,6 +13,7 @@ echo "关闭服务器。。。"
 screen -Rd minecraft -X stuff "say Closing server (stop.sh called)...$(printf '\r')"
 screen -Rd minecraft -X stuff "stop$(printf '\r')"
 
+echo "检查服务器是否已关闭。。。"
 # Wait up to 30 seconds for server to close
 StopChecks=0
 while [ $StopChecks -lt 30 ]; do
