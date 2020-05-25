@@ -1,6 +1,14 @@
 #!/bin/sh
-# Marc Tönsing - V1.1 - 18.05.2018
-# Minecraft Server restart and pi reboot.
+# James Chambers - V1.0 - March 24th 2018
+# Marc Tönsing - V1.1 - May 18th 2018
+# 老明 - V1.9 - May 23th 2020
+
+# Check if server is running
+if ! screen -list | grep -q "minecraft"; then
+	echo "Minecraft服务器没在运行!"
+	exit 1
+fi
+
 screen -Rd minecraft -X stuff "say Server is restarting in 30 seconds! $(printf '\r')"
 sleep 23s
 screen -Rd minecraft -X stuff "say Server is restarting in 7 seconds! $(printf '\r')"
@@ -19,8 +27,17 @@ screen -Rd minecraft -X stuff "say Server is restarting in 1 second! $(printf '\
 sleep 1s
 screen -Rd minecraft -X stuff "say Closing server...$(printf '\r')"
 screen -Rd minecraft -X stuff "stop $(printf '\r')"
-sleep 15s
-echo "Updating to most recent paperclip version."
-wget -q -O /home/pi/minecraft/paperclip.jar https://papermc.io/api/v1/paper/1.15.2/latest/download
-echo "Restarting now."
-sudo /sbin/reboot
+
+# 等待30秒确保服务器已关闭
+echo "关闭服务器。。。"
+StopChecks=0
+while [ $StopChecks -lt 30 ]; do
+  if ! screen -list | grep -q "minecraft"; then
+    break
+  fi
+  sleep 1;
+  StopChecks=$((StopChecks+1))
+done
+
+echo "重启。"
+sudo reboot

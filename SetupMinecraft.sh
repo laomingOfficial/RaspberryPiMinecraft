@@ -1,58 +1,116 @@
 #!/bin/bash
 # Original Minecraft Server Installation Script - James A. Chambers - https://www.jamesachambers.com.
 # Changes and simplifications by Marc Tönsing
-# V1.1 - Dec 15th 2019
-# GitHub Repository: https://github.com/mtoensing/RaspberryPiMinecraft
+# V1.1 - Dec 15th 2019 https://github.com/mtoensing/RaspberryPiMinecraft
+# V1.9 - May 23th 2020 老明 https://github.com/laomingOfficial/RaspberryPiMinecraft
 
-echo "Minecraft Server installation script by James Chambers and Marc Tönsing - V1.0"
-echo "Latest version always at https://github.com/mtoensing/RaspberryPiMinecraft"
+echo "Minecraft Server installation script by James Chambers, Marc Tönsing & 老明 - V1.9"
+echo "Latest version always at https://github.com/laomingOfficial/RaspberryPiMinecraft"
 
+# 读取total内存
+Get_ServerMemory(){
+	TotalMemory=$(awk '/MemTotal/ { printf "%.0f\n", $2/1024 }' /proc/meminfo)
+	AvailableMemory=$(awk '/MemAvailable/ { printf "%.0f\n", $2/1024 }' /proc/meminfo)
+	echo "Total memory: $TotalMemory - Available Memory: $AvailableMemory"
+	
+	if [ $TotalMemory -lt 3000 ]; then
+		echo "树莓派内存低于3GB，自动设置Minecraft最高内存为800MB"
+		MemSelected=800
+	else
+		echo "树莓派内存高于3GB，自动设置Minecraft最高内存为2600MB"
+		MemSelected=2600
+	fi
+}
+
+# 更新脚本
+Update_Scripts() {
+	# 移除全部脚本
+	rm minecraft/start.sh minecraft/stop.sh minecraft/restart.sh
+	
+	# 下载start.sh
+	echo "下载start.sh ..."
+	wget -O start.sh https://raw.githubusercontent.com/laomingOfficial/RaspberryPiMinecraft/master/start.sh
+	chmod +x start.sh
+	sed -i "s:memselect:$MemSelected:g" start.sh
+	
+	# 下载stop.sh
+	echo "下载stop.sh ..."
+	wget -O stop.sh https://raw.githubusercontent.com/laomingOfficial/RaspberryPiMinecraft/master/stop.sh
+	chmod +x stop.sh
+	sed -i "s:dirname:$DirName:g" stop.sh
+
+	# 下载restart.sh
+	echo "下载restart.sh ..."
+	wget -O restart.sh https://raw.githubusercontent.com/laomingOfficial/RaspberryPiMinecraft/master/restart.sh
+	chmod +x restart.sh
+}
+
+Read_LatestMCVersion() {
+	response=$(curl -s https://papermc.io/api/v1/paper)
+	temp=${response#*'"versions":["'}
+	latestVersion=${temp%%'"'*}
+}
+
+Update_LatestMC() {
+	echo "开始下载Paper Minecraft server V${latestVersion}"
+	wget -q -O /home/pi/minecraft/paperclip.jar https://papermc.io/api/v1/paper/${latestVersion}/latest/download
+	echo "下载好啦"
+}
+
+Get_ServerMemory
+Read_LatestMCVersion
+
+# 如果文件夹存在，更新最新脚本
 if [ -d "minecraft" ]; then
-  echo "Directory minecraft already exists!  Exiting... "
-  exit 1
+	echo "Minecraft文件夹存在"
+	echo "如果要继续更新V${latestVersion}吗(minecraft会自动关闭)？ (y/n)"
+	
+	read answer
+	
+	if [ "$answer" != "${answer#[Yy]}" ]; then
+		if screen -list | grep -q "minecraft"; then
+			screen -Rd minecraft -X stuff "stop $(printf '\r')"
+			sleep 15s
+			echo "Minecraft服务器已关闭。"
+			break
+		fi
+	
+		Update_LatestMC
+		Update_Scripts
+		
+		echo "Minecraft脚本更新好啦... .____."
+	fi
+	
+	exit 0
 fi
 
-echo "Updating packages..."
+echo "重新获取软件包列表 。。。"
 sudo apt-get update
 
-echo "Installing latest Java OpenJDK 11..."
+echo "安装Java OpenJDK 11。。。"
 sudo apt-get install openjdk-11-jre-headless -y
 
-echo "Installing screen... "
+echo "安装screen。。。 "
 sudo apt-get install screen -y
 
-echo "Creating minecraft server directory..."
+echo "创建minecraft服务器文件夹。。。"
 mkdir minecraft
 cd minecraft
 
-echo "Getting latest Paper Minecraft server..."
-wget -O paperclip.jar https://papermc.io/api/v1/paper/1.15.2/latest/download
+Update_LatestMC
 
-echo "Building the Minecraft server... "
+echo "构建Minecraft服务器。。。 "
 java -jar -Xms800M -Xmx800M paperclip.jar
 
-echo "Accepting the EULA... "
+echo "接受EULA。。。 "
 echo eula=true > eula.txt
 
-echo "Grabbing start.sh from repository... "
-wget -O start.sh https://raw.githubusercontent.com/mtoensing/RaspberryPiMinecraft/master/start.sh
-chmod +x start.sh
+Update_Scripts
 
-echo "Oh wait. Checking for total memory available..."
-TotalMemory=$(awk '/MemTotal/ { printf "%.0f\n", $2/1024 }' /proc/meminfo)
-if [ $TotalMemory -lt 3000 ]; then
-  echo "Sorry, have to grab low spec start.sh from repository... "
-  wget -O start.sh https://raw.githubusercontent.com/mtoensing/RaspberryPiMinecraft/master/start_lowspec.sh
-fi
-
-echo "Grabbing restart.sh from repository... "
-wget -O restart.sh https://raw.githubusercontent.com/mtoensing/RaspberryPiMinecraft/master/restart.sh
-chmod +x restart.sh
-
-echo "Enter a name for your server "
-read -p 'Server Name: ' servername
+echo "输入你的Minecraft服务器名称 "
+read -p '服务器名称: ' servername
 echo "server-name=$servername" >> server.properties
 echo "motd=$servername" >> server.properties
 
-echo "Setup is complete. To run the server go to the minecraft directory and type ./start.sh"
-echo "Don't forget to set up port forwarding on your router. The default port is 25565"
+echo "服务器设置完成。进入minecraft服务器目录，然后输入./start.sh 开启服务器"
+echo "如果要开放外网的话，记得在路由器设置端口转发(port forwarding)，端口: 25565"
