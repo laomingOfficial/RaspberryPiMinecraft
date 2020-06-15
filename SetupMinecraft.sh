@@ -54,6 +54,7 @@ Update_Service() {
 	sudo sed -i "s:dirminecraft:$DirMinecraft:g" /etc/systemd/system/minecraft.service
 	sudo systemctl daemon-reload
 	echo "开机时是否自动开启Minecraft服务器？ (y/n)"
+	read answer
 	if [ "$answer" != "${answer#[Yy]}" ]; then
 		sudo systemctl enable minecraft.service
 	else
@@ -85,7 +86,7 @@ DirMinecraft=$DirName"/minecraft"
 UserName=$(whoami)
 
 # 如果文件夹存在，更新最新脚本
-if [ -d DirMinecraft ]; then
+if [ -d $DirMinecraft ]; then
 	echo "Minecraft文件夹存在"
 	echo "如果要继续更新V${latestVersion} - Build${buildVersion}吗(minecraft会自动关闭)？ (y/n)"
 	
@@ -120,8 +121,8 @@ echo "安装screen。。。 "
 sudo apt-get install screen -y
 
 echo "创建minecraft服务器文件夹。。。"
-mkdir DirMinecraft
-cd DirMinecraft
+mkdir $DirMinecraft
+cd $DirMinecraft
 
 Update_LatestMC
 
