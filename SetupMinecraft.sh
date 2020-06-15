@@ -3,8 +3,9 @@
 # Changes and simplifications by Marc Tönsing
 # V1.1 - Dec 15th 2019 https://github.com/mtoensing/RaspberryPiMinecraft
 # V1.9 - May 23th 2020 老明 https://github.com/laomingOfficial/RaspberryPiMinecraft
+# V1.91 - Jun 15th 2020 老明 https://github.com/laomingOfficial/RaspberryPiMinecraft
 
-echo "Minecraft服务器安装脚本 by James Chambers, Marc Tönsing & 老明 - V1.9"
+echo "Minecraft服务器安装脚本 by James Chambers, Marc Tönsing & 老明 - V1.91"
 echo "最新版本在 https://github.com/laomingOfficial/RaspberryPiMinecraft"
 
 # 读取total内存
@@ -32,6 +33,7 @@ Update_Scripts() {
 	wget -O start.sh https://raw.githubusercontent.com/laomingOfficial/RaspberryPiMinecraft/master/start.sh
 	chmod +x start.sh
 	sed -i "s:memselect:$MemSelected:g" start.sh
+	sed -i "s:dirminecraft:$DirMinecraft:g" start.sh
 	
 	# 下载stop.sh
 	echo "下载stop.sh ..."
@@ -44,10 +46,28 @@ Update_Scripts() {
 	chmod +x restart.sh
 }
 
+# 更新服务
+Update_Service() {
+	sudo wget -O /etc/systemd/system/minecraft.service https://raw.githubusercontent.com/laomingOfficial/RaspberryPiMinecraft/master/minecraft.service
+	sudo chmod +x /etc/systemd/system/minecraft.service
+	sudo sed -i "s/replace/$UserName/g" /etc/systemd/system/minecraft.service
+	sudo sed -i "s:dirminecraft:$DirMinecraft:g" /etc/systemd/system/minecraft.service
+	sudo systemctl daemon-reload
+	echo "开机时是否自动开启Minecraft服务器？ (y/n)"
+	if [ "$answer" != "${answer#[Yy]}" ]; then
+		sudo systemctl enable minecraft.service
+	else
+		sudo systemctl disable minecraft.service
+	fi
+}
+
 Read_LatestMCVersion() {
 	response=$(curl -s https://papermc.io/api/v1/paper)
 	temp=${response#*'"versions":["'}
 	latestVersion=${temp%%'"'*}
+	response=$(curl -s https://papermc.io/api/v1/paper/$latestVersion/latest)
+	temp=${response#*'"build":"'}
+	buildVersion=${temp%%'"'*}
 }
 
 Update_LatestMC() {
@@ -59,10 +79,15 @@ Update_LatestMC() {
 Get_ServerMemory
 Read_LatestMCVersion
 
+# 提取home和username
+DirName=$(readlink -e ~)
+DirMinecraft=$DirName"/minecraft"
+UserName=$(whoami)
+
 # 如果文件夹存在，更新最新脚本
-if [ -d "minecraft" ]; then
+if [ -d DirMinecraft ]; then
 	echo "Minecraft文件夹存在"
-	echo "如果要继续更新V${latestVersion}吗(minecraft会自动关闭)？ (y/n)"
+	echo "如果要继续更新V${latestVersion} - Build${buildVersion}吗(minecraft会自动关闭)？ (y/n)"
 	
 	read answer
 	
@@ -77,6 +102,7 @@ if [ -d "minecraft" ]; then
 		cd minecraft
 		Update_LatestMC
 		Update_Scripts
+		Update_Service
 		
 		echo "Minecraft脚本更新好啦... .____."
 	fi
@@ -94,8 +120,8 @@ echo "安装screen。。。 "
 sudo apt-get install screen -y
 
 echo "创建minecraft服务器文件夹。。。"
-mkdir minecraft
-cd minecraft
+mkdir DirMinecraft
+cd DirMinecraft
 
 Update_LatestMC
 
@@ -106,6 +132,7 @@ echo "接受EULA。。。 "
 echo eula=true > eula.txt
 
 Update_Scripts
+Update_Service
 
 echo "输入你的Minecraft服务器名称 "
 read -p '服务器名称: ' servername

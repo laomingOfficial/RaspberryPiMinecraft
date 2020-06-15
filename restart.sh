@@ -2,6 +2,7 @@
 # James Chambers - V1.0 - March 24th 2018
 # Marc Tönsing - V1.1 - May 18th 2018
 # 老明 - V1.9 - May 23th 2020
+# 老明 - V1.91 - Jun 15th 2020
 
 # Check if server is running
 if ! screen -list | grep -q "minecraft"; then
