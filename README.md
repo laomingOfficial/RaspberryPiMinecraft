@@ -9,6 +9,27 @@
 2) chmod +x SetupMinecraft.sh
 3) ./SetupMinecraft.sh
 
+Service服务指令:  
+```
+# 重载所有修改过的配置文件
+sudo systemctl daemon-reload
+
+# 启动服务
+sudo systemctl start minecraft
+
+# 将服务设置为开机启动
+sudo systemctl enable minecraft
+
+# 停止运行服务
+sudo systemctl stop minecraft
+
+# 将服务设置为禁止开机启动
+sudo systemctl disable minecraft
+
+# 检测服务状态
+sudo systemctl status minecraft
+```
+
 PaperMC: [https://papermc.io/](https://papermc.io/)
 
 这个repo是从以下2个repo fork过来滴，感谢  
