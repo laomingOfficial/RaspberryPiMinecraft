@@ -1,4 +1,4 @@
-# 树莓派安装Minecraft 1.15.2 PC版服务器
+# 树莓派安装Minecraft 1.16.1 PC版服务器
 这个Minecraft PC版服务器是采用PaperMC，是目前最好的MC服务器。  
 我在SetupMinecraft.sh里增加了检测和显示最新PaperMC版本，也汉化了里面显示的文字。
 
